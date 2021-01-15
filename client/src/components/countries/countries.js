@@ -29,7 +29,7 @@ class Countries extends React.Component {
         <h2> First small class Test</h2>
         <p>{this.state.name}</p>
         {this.state.countries.map(obj => {
-          return <p key={obj["id"]}> {obj["info"]} </p>;
+          return <p key={obj["id"]}> {obj["name"]} </p>;
         })}
       </div>
     );
