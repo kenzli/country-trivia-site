@@ -5,16 +5,16 @@ class HiLoButton extends React.Component {
   
   render() {
     let higherButton;
-    let lowerButton;
-    if (this.props.country2["population"] >= this.props.country1["population"]) {
-      higherButton = <button onClick={this.props.HiLoPress.bind(this, 1)}>Higher</button>
-      lowerButton = <Link to="/end" onClick={this.props.HiLoPress.bind(this, 0)}><button>Lower</button></Link>
+    let lowerButton;  
+    if (this.props.country2[this.props.mode] >= this.props.country1[this.props.mode]) {
+      higherButton = <Link className='hilo-button' to="/game" onClick={this.props.HiLoPress.bind(this, 1)}>Higher</Link>
+      lowerButton = <Link className='hilo-button' to="/end" onClick={this.props.HiLoPress.bind(this, 0)}>Lower</Link>
     } else {
-      higherButton = <Link to="/end" onClick={this.props.HiLoPress.bind(this, 0)}><button>Higher</button></Link>
-      lowerButton = <button onClick={this.props.HiLoPress.bind(this, 1)}>Lower</button>
+      higherButton = <Link className='hilo-button' to="/end" onClick={this.props.HiLoPress.bind(this, 0)}>Higher</Link>
+      lowerButton = <Link className='hilo-button' to="/game" onClick={this.props.HiLoPress.bind(this, 1)}>Lower</Link>
     }
     return (
-      <div className='hilobuttons'>
+      <div>
         {higherButton}
         {lowerButton}
       </div>

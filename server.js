@@ -3,6 +3,7 @@ const app = express();
 const request = require('request');
 const port = 5000;
 var countries = [];
+var countryCount = 0;
 
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('', (err) => {
@@ -23,7 +24,10 @@ function initCountries() {
       //console.log(countries[2]);
   
       for (var i = 0; i < countries.length; i++) {
-        sql_line.run(countries[i]["name"], countries[i]["population"], countries[i]["area"]);
+        if (countries[i]["population"] !== null && countries[i]["area"] !== null) {
+          sql_line.run(countries[i]["name"], countries[i]["population"], countries[i]["area"]);
+          countryCount++;
+        }
       }
       sql_line.finalize();
 
@@ -48,6 +52,10 @@ app.get('/api/test', (req, res) => {
   res.json(test);
 });
 
+app.get('/api/countryNum', (req, res) => {
+  console.log("COUNTRYNUMCALLED" + countryCount);
+  res.json(countryCount);
+});
 
 app.get('/api/countries', (req, res) => {
   db.all("SELECT * FROM countrydata", (err, results) => {

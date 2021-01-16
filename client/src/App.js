@@ -4,15 +4,14 @@ import Score from './components/Score.js';
 import HiLoButton from './components/HiLoButton.js';
 import './App.css';
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
-import Home from './pages/home.js';
-import Game from './pages/game.js';
-import End from './pages/end.js';
+import Home from './pages/Home.js';
+import Game from './pages/Game.js';
+import End from './pages/End.js';
 import { useHistory } from "react-router-dom";
 import { browserHistory } from 'react-router';
 
 
-function getRandInt(exclude = -1) {
-  var countryNum = 250
+function getRandInt(countryNum = 245, exclude = -1) {
   var rand = null;
   while (rand === null || rand === exclude) {
     rand = Math.round(Math.random() * (countryNum - 1));
@@ -38,8 +37,9 @@ class App extends React.Component {
       size: ""
     },
     score: 0,
+    countryNum: 245,
     highScore: 0,
-    mode: "pop"
+    mode: "population"
   }
 
   //index, dbId, name, population, size
@@ -69,9 +69,16 @@ class App extends React.Component {
           console.log('Fetch New Successful', country2data);
           console.log('Country 1: ', this.state.country1);
           console.log('Country 2: ', this.state.country2);
+          console.log(this.state.countryNum);
         }));
 
     }
+  }
+
+  componentDidMount() {
+    fetch(`/api/countryNum`)
+        .then(res => res.json())
+        .then(countryNum => this.setState({ countryNum: countryNum }, () => console.log('Country set Successful', countryNum)));
   }
  
   HiLoPress = (correct) => { // Correct Press
@@ -95,24 +102,28 @@ class App extends React.Component {
     return (
       <Router>
         <div className="App">
-          <h1>Country Guesser</h1>
           <Route path="/" exact>
             <Home setMode={this.setMode}/>
           </Route>
           <Route path="/game" exact>
-
-            <Game page={this.state.page} setCountry={this.setCountry} />
-            <h2> Country 1</h2>
-            <Country country={this.state.country1} index={1} mode={this.state.mode}/>
-            <h2> Country 2</h2>
-            <Country country={this.state.country2} index={2} mode={this.state.mode}/>
-            <HiLoButton country1={this.state.country1} country2={this.state.country2} HiLoPress={this.HiLoPress} />
-
+            <div className="game">
+              <Game page={this.state.page} setCountry={this.setCountry} mode={this.state.mode}/>
+              <h1> Country 1</h1>
+              <Country country={this.state.country1} index={1} mode={this.state.mode}/>
+              <br></br>
+              <h1> Country 2</h1>
+              <Country country={this.state.country2} index={2} mode={this.state.mode}/>
+              <HiLoButton country1={this.state.country1} country2={this.state.country2} HiLoPress={this.HiLoPress} mode={this.state.mode} />
+              <br></br>
+              <Score score={this.state.score} highScore={this.state.highScore} />
+            </div>
           </Route>
           <Route path="/end" exact>
-            <End country={this.state.country2} mode={this.state.mode}></End>
+
+              <End country={this.state.country2} mode={this.state.mode} score={this.state.score}></End>
+              <Score score={this.state.score} highScore={this.state.highScore} />
+
           </Route>
-          <Score score={this.state.score} highScore={this.state.highScore} />
         </div>
       </Router>
     );
