@@ -6,11 +6,19 @@ function rounded(x) {
 }
 
 class End extends React.Component {
+  
+
   render() {
+    let endText;
+    if (this.props.mode === "pop") {
+      endText = <p>{this.props.country["name"]} has a population of {rounded(this.props.country["population"])}</p>;
+    } else if (this.props.mode === "size") {
+      endText = <p>{this.props.country["name"]} has an area of {rounded(this.props.country["size"])} km^2</p>;
+    }
     return (
       <div className='end'>
         <h1>Game over</h1>
-        <p>{this.props.country["name"]} has a population of {rounded(this.props.country["population"])}</p>
+        {endText}
         <br></br>
         <Link to="/"><button>Go Home</button></Link>
         <br></br>

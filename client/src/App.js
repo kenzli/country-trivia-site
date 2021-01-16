@@ -38,7 +38,8 @@ class App extends React.Component {
       size: ""
     },
     score: 0,
-    highScore: 0
+    highScore: 0,
+    mode: "pop"
   }
 
   //index, dbId, name, population, size
@@ -86,24 +87,30 @@ class App extends React.Component {
     }
   }
 
+  setMode = (mode) => {
+    this.setState( {mode: mode} );
+  }
+
   render() {
     return (
       <Router>
         <div className="App">
           <h1>Country Guesser</h1>
-          <Route path="/" exact component={Home} />
+          <Route path="/" exact>
+            <Home setMode={this.setMode}/>
+          </Route>
           <Route path="/game" exact>
 
             <Game page={this.state.page} setCountry={this.setCountry} />
             <h2> Country 1</h2>
-            <Country country={this.state.country1} index={1} />
+            <Country country={this.state.country1} index={1} mode={this.state.mode}/>
             <h2> Country 2</h2>
-            <Country country={this.state.country2} index={2} />
+            <Country country={this.state.country2} index={2} mode={this.state.mode}/>
             <HiLoButton country1={this.state.country1} country2={this.state.country2} HiLoPress={this.HiLoPress} />
 
           </Route>
           <Route path="/end" exact>
-            <End country={this.state.country2}></End>
+            <End country={this.state.country2} mode={this.state.mode}></End>
           </Route>
           <Score score={this.state.score} highScore={this.state.highScore} />
         </div>
