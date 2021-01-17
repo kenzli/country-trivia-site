@@ -45,11 +45,11 @@ class App extends React.Component {
       var x2 = getRandInt(this.state.countryNum, x1);
       fetch(`/api/countries/${x1}`)
         .then(res => res.json())
-        .then(country1data => this.setState({ country1: country1data[0] }, () => console.log('Fetch 1 Successful', country1data)));
+        .then(country1data => this.setState({ country1: country1data[0] }));
 
       fetch(`/api/countries/${x2}`)
         .then(res => res.json())
-        .then(country2data => this.setState({ country2: country2data[0] }, () => console.log('Fetch 2 Successful', country2data)));
+        .then(country2data => this.setState({ country2: country2data[0] }));
 
       this.setState({ page: "game" });
       this.setState({ score: 0 });
@@ -61,12 +61,7 @@ class App extends React.Component {
 
       fetch(`/api/countries/${newInt}`)
         .then(res => res.json())
-        .then(country2data => this.setState({ country2: country2data[0] }, () => {
-          console.log('Fetch New Successful', country2data);
-          console.log('Country 1: ', this.state.country1);
-          console.log('Country 2: ', this.state.country2);
-          console.log(this.state.countryNum);
-        }));
+        .then(country2data => this.setState({ country2: country2data[0] }));
 
     }
   }
@@ -74,18 +69,16 @@ class App extends React.Component {
   componentDidMount() {
     fetch(`/api/countryNum`)
         .then(res => res.json())
-        .then(countryNum => this.setState({ countryNum: countryNum }, () => console.log('Country set Successful', countryNum)));
+        .then(countryNum => this.setState({ countryNum: countryNum }));
   }
  
   HiLoPress = (correct) => { // Correct Press
     if (correct === 1) {
-      console.log("Correct!");
       this.setState({ score: (this.state.score + 1) }, () => {
         if (this.state.score >= this.state.highScore) this.setState({ highScore: this.state.score });
       });
       this.setCountry();
     } else {
-      console.log("Incorrect!");
       this.setState( {page: "end"} );
     }
   }

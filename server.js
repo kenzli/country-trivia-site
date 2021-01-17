@@ -41,26 +41,14 @@ function initCountries() {
 }
 
 initCountries();
-/*
-db.all("SELECT rowid AS id, name, population, size FROM countrydata", (err, results) => {
-  console.log("THIS SHOULD WORK");
-  console.log(results);
-});
-*/
-app.get('/api/test', (req, res) => {
-  var test = { text: "Hello world from the backend" };
-  res.json(test);
-});
 
 app.get('/api/countryNum', (req, res) => {
-  console.log("COUNTRYNUMCALLED" + countryCount);
   res.json(countryCount);
 });
 
 app.get('/api/countries', (req, res) => {
   db.all("SELECT * FROM countrydata", (err, results) => {
     if (err) { return console.log(err); }
-    console.log(results);
     res.send(results);
   });
 });
@@ -69,8 +57,6 @@ app.get('/api/countries', (req, res) => {
 app.get('/api/countries/:id', (req, res) => {
   db.all(`SELECT rowid, * FROM countrydata WHERE rowid = ${req.params["id"]}`, (err, results) => {
     if (err) { return console.log(err); }
-    console.log("HERE ARE THE RESULTS");
-    console.log(err);
     console.log(results);
     res.send(results);
   });
