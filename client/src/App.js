@@ -2,11 +2,12 @@ import React from 'react';
 import Country from './components/Country.js';
 import Score from './components/Score.js';
 import HiLoButton from './components/HiLoButton.js';
+import Home from './components/Home.js';
+import Game from './components/Game.js';
+import End from './components/End.js';
 import './App.css';
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
-import Home from './pages/Home.js';
-import Game from './pages/Game.js';
-import End from './pages/End.js';
+
 
 
 function getRandInt(countryNum = 240, exclude = -1) {
