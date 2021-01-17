@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const request = require('request');
-const port = 5000;
+const port = process.env.PORT || 5000;
 var countries = [];
 var countryCount = 0;
 
@@ -65,5 +65,4 @@ app.get('/api/countries/:id', (req, res) => {
 
 
 
-//app.listen(port, () => console.log(`Server started: port ${port}`));
 
