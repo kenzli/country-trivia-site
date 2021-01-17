@@ -1,9 +1,5 @@
 .App {
   display: flex;
-  background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('./pages/world.jpg');
-  background-size: cover;
-  background-position: center;
-  height: 100vh;
 }
 
 .game, .end {
@@ -44,4 +40,8 @@
   padding: 8px;
   border-radius: 10px;
   margin: 20px;
+}
+
+.scores{
+  font-size: 20px;
 }

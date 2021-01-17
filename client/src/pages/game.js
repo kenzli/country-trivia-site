@@ -12,7 +12,7 @@ class Game extends React.Component {
   render() {
     return (
       <div className='game-header'>
-        <h1>Game</h1>
+        <h1>Country Guesser</h1>
         <p>You are currently in a {this.props.mode} game</p>
         <Link to="/end" className="end-button">End Game</Link>
       </div>

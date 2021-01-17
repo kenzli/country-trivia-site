@@ -7,11 +7,9 @@ import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 import Home from './pages/Home.js';
 import Game from './pages/Game.js';
 import End from './pages/End.js';
-import { useHistory } from "react-router-dom";
-import { browserHistory } from 'react-router';
 
 
-function getRandInt(countryNum = 245, exclude = -1) {
+function getRandInt(countryNum = 240, exclude = -1) {
   var rand = null;
   while (rand === null || rand === exclude) {
     rand = Math.round(Math.random() * (countryNum - 1));
@@ -20,8 +18,6 @@ function getRandInt(countryNum = 245, exclude = -1) {
 }
 
 class App extends React.Component {
-
-
   state = {
     page: "home",
     country1: {
@@ -37,7 +33,7 @@ class App extends React.Component {
       size: ""
     },
     score: 0,
-    countryNum: 245,
+    countryNum: 240,
     highScore: 0,
     mode: "population"
   }
@@ -45,8 +41,8 @@ class App extends React.Component {
   //index, dbId, name, population, size
   setCountry = () => {
     if (this.state.page === "home" || this.state.page === "end") { // New game
-      var x1 = getRandInt();
-      var x2 = getRandInt(x1);
+      var x1 = getRandInt(this.state.countryNum);
+      var x2 = getRandInt(this.state.countryNum, x1);
       fetch(`/api/countries/${x1}`)
         .then(res => res.json())
         .then(country1data => this.setState({ country1: country1data[0] }, () => console.log('Fetch 1 Successful', country1data)));
