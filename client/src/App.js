@@ -57,7 +57,7 @@ class App extends React.Component {
 
 
     } else if (this.state.page === "game") { // In a game - get next country
-      var newInt = getRandInt(this.state.country2.rowid);
+      var newInt = getRandInt(this.state.countryNum, this.state.country2.rowid);
       this.setState({ country1: this.state.country2 });
 
       fetch(`/api/countries/${newInt}`)
