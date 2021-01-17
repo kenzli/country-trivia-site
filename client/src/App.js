@@ -109,10 +109,7 @@ class App extends React.Component {
             </div>
           </Route>
           <Route path="/end" exact>
-
-              <End country={this.state.country2} mode={this.state.mode} score={this.state.score}></End>
-              <Score score={this.state.score} highScore={this.state.highScore} />
-
+              <End country={this.state.country2} mode={this.state.mode} score={this.state.score} highScore={this.state.highScore}></End>
           </Route>
         </div>
       </Router>

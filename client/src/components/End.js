@@ -24,6 +24,7 @@ class End extends React.Component {
         <h1>Game over</h1>
         {endText}
         {scoreText}
+        <p>Your high score is {this.props.highScore}</p>
         <br></br>
         <Link to="/" className="home-button">Go Home</Link>
         <br></br>
