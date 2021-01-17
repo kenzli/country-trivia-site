@@ -1,9 +1,12 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 const request = require('request');
 const port = process.env.PORT || 5000;
 var countries = [];
 var countryCount = 0;
+
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('', (err) => {
@@ -60,6 +63,10 @@ app.get('/api/countries/:id', (req, res) => {
     console.log(results);
     res.send(results);
   });
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
 
 
