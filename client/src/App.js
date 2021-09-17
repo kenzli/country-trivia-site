@@ -6,72 +6,65 @@ import Home from './components/Home.js';
 import Game from './components/Game.js';
 import End from './components/End.js';
 import './App.css';
-import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
+// import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-
-
-function getRandInt(countryNum = 240, exclude = -1) {
-  var rand = null;
-  while (rand === null || rand === exclude) {
-    rand = Math.round(Math.random() * (countryNum - 1));
-  }
-  return rand;
-}
 
 class App extends React.Component {
   state = {
     page: "home",
     country1: {
-      dbId: 0,
       name: "",
       population: "",
       size: ""
     },
     country2: {
-      db_id: 0,
       name: "",
       population: "",
       size: ""
     },
     score: 0,
-    countryNum: 240,
     highScore: 0,
     mode: "population"
   }
 
   //index, dbId, name, population, size
-  setCountry = () => {
+  setCountry = async () => {
     if (this.state.page === "home" || this.state.page === "end") { // New game
-      var x1 = getRandInt(this.state.countryNum);
-      var x2 = getRandInt(this.state.countryNum, x1);
-      fetch(`/api/countries/${x1}`)
-        .then(res => res.json())
-        .then(country1data => this.setState({ country1: country1data[0] }));
+      const res1 = await fetch(`/api/randcountry`);
+      const jsonRes1 = await res1.json();
+      this.setState({ country1: {
+        name: jsonRes1[0].name,
+        population: jsonRes1[0].population,
+        area: jsonRes1[0].area,
+      }});
 
-      fetch(`/api/countries/${x2}`)
-        .then(res => res.json())
-        .then(country2data => this.setState({ country2: country2data[0] }));
+      do {
+        const res2 = await fetch(`/api/randcountry`);
+        const jsonRes2 = await res2.json();
+        this.setState({ country2: {
+          name: jsonRes2[0].name,
+          population: jsonRes2[0].population,
+          area: jsonRes2[0].area,
+        }});
+      } while (this.state.country1.name === this.state.country2.name)
 
       this.setState({ page: "game" });
       this.setState({ score: 0 });
 
-
     } else if (this.state.page === "game") { // In a game - get next country
-      var newInt = getRandInt(this.state.countryNum, this.state.country2.rowid);
       this.setState({ country1: this.state.country2 });
 
-      fetch(`/api/countries/${newInt}`)
-        .then(res => res.json())
-        .then(country2data => this.setState({ country2: country2data[0] }));
+      do {
+        const res2 = await fetch(`/api/randcountry`);
+        const jsonRes2 = await res2.json();
+        this.setState({ country2: jsonRes2[0] });
+      } while (this.state.country1.name === this.state.country2.name)
 
     }
   }
 
-  componentDidMount() {
-    fetch(`/api/countryNum`)
-        .then(res => res.json())
-        .then(countryNum => this.setState({ countryNum: countryNum }));
-  }
+  componentDidMount() {}
  
   HiLoPress = (correct) => { // Correct Press
     if (correct === 1) {

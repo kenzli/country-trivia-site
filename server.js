@@ -2,67 +2,77 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const request = require('request');
+require('dotenv').config()
+//const { default: Country } = require('./client/src/components/Country');
 const port = process.env.PORT || 5000;
 var countries = [];
 var countryCount = 0;
+const Country = require('./db');
 
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('', (err) => {
-  if (err) console.error(err.message);
-  console.log("Connected to SQLite");
-});
-
-function initCountries() {
+function initMongoCountries() {
+  console.log('Inside initmongo');
   request('https://restcountries.eu/rest/v2/all', { json: true }, (err, res, body) => {
+    console.log('inside req');
     if (err) { return console.log(err); }
     countries = body;
-    db.serialize(() => {
-  
-      db.run("CREATE TABLE countrydata (name TEXT, population INT, size INT)");
-      //db.run("CREATE TABLE countrydata (name TEXT, population INT, size INT)");
-      var sql_line = db.prepare("INSERT INTO countrydata (name , population , size) VALUES (?,?,?)");
-  
-      //console.log(countries[2]);
-  
-      for (var i = 0; i < countries.length; i++) {
-        if (countries[i]["population"] !== null && countries[i]["area"] !== null) {
-          sql_line.run(countries[i]["name"], countries[i]["population"], countries[i]["area"]);
-          countryCount++;
-        }
-      }
-      sql_line.finalize();
 
-      console.log("Countries initialized");
-      db.each("SELECT rowid AS id, name, population, size FROM countrydata", (err, row) => {
-        //console.log(row.id + ": " + row.name + " - Pop: " + row.population + " - Size: " + row.size);
-      });
-    });
-    app.listen(port, () => console.log(`Server started: port ${port}`));
+    for (var i = 0; i < countries.length; i++) {
+      if (countries[i]["population"] !== null && countries[i]["area"] !== null) {
+        const country = new Country({
+          name: countries[i]["name"],
+          population: countries[i]["population"],
+          area: countries[i]["area"],
+        });
+        console.log("about to save country");
+
+        country.save().then(savedCountry => {
+          console.log(savedCountry);
+        })
+      }
+    }
+
+    console.log("Countries initialized");
   });
 }
 
-initCountries();
+console.log("Counting countries:");
+Country.count().then((count) => {
+  console.log(count);
+});
+// initMongoCountries();
+
+
+app.listen(port, () => console.log(`Server started: port ${port}`));
 
 app.get('/api/countryNum', (req, res) => {
-  res.json(countryCount);
+  Country.count().then((countryCount) => {
+    console.log("FOUND COUNTRY COUNT: ", countryCount);
+    res.json(countryCount);
+  });
 });
 
 app.get('/api/countries', (req, res) => {
-  db.all("SELECT * FROM countrydata", (err, results) => {
-    if (err) { return console.log(err); }
+  Country.find({}).then((results) => {
+    console.log("GOT ALL COUNTRIES: ", results);
     res.send(results);
-  });
+  })
+});
+
+app.get('/api/randcountry', (req, res) => {
+  Country.aggregate([{$sample: {size: 1}}]).then(country => {
+    console.log('GOT RANDOM COUNTRY');
+    console.log(country);
+    res.json(country);
+  })
 });
 
 
 app.get('/api/countries/:id', (req, res) => {
-  db.all(`SELECT rowid, * FROM countrydata WHERE rowid = ${req.params["id"]}`, (err, results) => {
-    if (err) { return console.log(err); }
-    console.log(results);
-    res.send(results);
-  });
+  Country.findById(req.params.id).then(country => {
+    response.json(country);
+  })
 });
 
 app.get('*', (req, res) => {
