@@ -13,7 +13,7 @@ class Game extends React.Component {
       <div className='game-header'>
         <h1>Country Guesser</h1>
         <p>You are currently in a {this.props.mode} game</p>
-        <Link to="/end" className="end-button">End Game</Link>
+        <Link to="/end" className="end-button" onClick={this.props.endGame.bind()} >End Game</Link>
       </div>
     );
   }

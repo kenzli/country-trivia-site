@@ -80,8 +80,12 @@ class App extends React.Component {
       });
       this.setCountry();
     } else {
-      this.setState( {page: "end"} );
+      this.endGame();
     }
+  }
+
+  endGame = () => {
+    this.setState( {page: "end"} );
   }
 
   setMode = (mode) => {
@@ -97,7 +101,7 @@ class App extends React.Component {
           </Route>
           <Route path="/game" exact>
             <div className="game">
-              <Game page={this.state.page} setCountry={this.setCountry} mode={this.state.mode}/>
+              <Game page={this.state.page} setCountry={this.setCountry} endGame = {this.endGame} mode={this.state.mode}/>
               <h1> Country 1</h1>
               <Country country={this.state.country1} index={1} mode={this.state.mode}/>
               <br></br>
